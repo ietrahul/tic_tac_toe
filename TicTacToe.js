@@ -1,26 +1,33 @@
-var content, winningCombinations , turn = 0;
-
+var content, winningCombinations , turn = 0, choice = "X";
 //Game methods
 window.onload=function(){
-   // painted = new Array();
     content = new Array();
     winningCombinations = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
     for(var l = 0; l <= 8; l++){
-    //painted[l] = false;
     content[l]='';
     }
 }
 
+function myChoice(){
+    choice = document.getElementById("selecto").checked ? 'O' : 'X';
+}
 
 function canvasClicked(canvasNumber){
   if (turn%2 == 0){
-    draw_x(canvasNumber);
-    checkForWin('X');
+    choice === "X" ? draw_x(canvasNumber) : draw_o(canvasNumber);
+    //checkForWin('X');
   }else {
-    draw_o(canvasNumber);
-    checkForWin('O');
+    choice === "X" ? draw_o(canvasNumber) : draw_x(canvasNumber);
+    //checkForWin('O');
   }
-  turn++;
+
+if (turn > 3) checkForWin(content[canvasNumber-1] );
+
+  if (turn >=9) {
+    setTimeout(function(){ confirm("THE GAME IS OVER!") }, 100);
+    setTimeout(function(){ location.reload(true); }, 100);
+  }
+
 }
 
 function draw_x(canvasNumber){
@@ -31,14 +38,16 @@ function draw_x(canvasNumber){
     ctx.beginPath();
     ctx.lineWidth = 8;
     ctx.strokeStyle = 'blue';
-    ctx.moveTo(40,20);
-    ctx.lineTo(240,120);
-    ctx.moveTo(40,120);
-    ctx.lineTo(240,20);
+    ctx.moveTo(40,25);
+    ctx.lineTo(240,125);
+    ctx.moveTo(40,125);
+    ctx.lineTo(240,25);
     ctx.stroke();
     ctx.closePath();
     content[canvasNumber-1] = 'X';
+    turn++;
   }
+  //if (turn > 3) checkForWin('X');
 }
 
 function draw_o(canvasNumber){
@@ -53,7 +62,9 @@ function draw_o(canvasNumber){
     ctx.stroke();
     ctx.closePath();
     content[canvasNumber-1] = 'O';
+    turn++;
   }
+  if (turn > 3) checkForWin('X');
 }
 
 function draw_line(canvasNumber,start_x,start_y,end_x,end_y){
@@ -83,9 +94,9 @@ function checkForWin(symbol){
         draw_line(winningCombinations[i][1]+1, 0, 75, 300, 75);
         draw_line(winningCombinations[i][2]+1, 0, 75, 300, 75);
        } else if ( i >=3 && i <6 ){
-        draw_line(winningCombinations[i][0]+1, 130, 0, 130, 200);
-        draw_line(winningCombinations[i][1]+1, 130, 0, 130, 200);
-        draw_line(winningCombinations[i][2]+1, 130, 0, 130, 200);
+        draw_line(winningCombinations[i][0]+1, 140, 0, 140, 200);
+        draw_line(winningCombinations[i][1]+1, 140, 0, 140, 200);
+        draw_line(winningCombinations[i][2]+1, 140, 0, 140, 200);
        } else if(i == 6) {
         draw_line(winningCombinations[i][0]+1, 0, 0, 300, 150);
         draw_line(winningCombinations[i][1]+1, 0, 0, 300, 150);
@@ -95,7 +106,8 @@ function checkForWin(symbol){
         draw_line(winningCombinations[i][1]+1, 0, 150, 300, 0);
         draw_line(winningCombinations[i][2]+1, 0, 150, 300, 0);
        }
-          setTimeout(function(){ alert("Player "+ symbol + " Won!") }, 100);
+         setTimeout(function(){ confirm("Player "+ symbol + " Won!") }, 100);
+         setTimeout(function(){ location.reload(true); }, 100);
        }
     }
-}1
+}
