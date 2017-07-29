@@ -21,13 +21,14 @@ function canvasClicked(canvasNumber){
     //checkForWin('O');
   }
 
-if (turn > 3) checkForWin(content[canvasNumber-1] );
-
-  if (turn >=9) {
-    setTimeout(function(){ confirm("THE GAME IS OVER!") }, 100);
-    setTimeout(function(){ location.reload(true); }, 100);
+  if (turn > 3 && turn < 9){
+    checkForWin(content[canvasNumber-1] );
+  } else if (turn >=9) {
+    if (checkForWin(content[canvasNumber-1] ) != 0 ) {
+      setTimeout(function(){ confirm("THE GAME IS OVER!") }, 100);
+      setTimeout(function(){ location.reload(true); }, 100);
+    }
   }
-
 }
 
 function draw_x(canvasNumber){
@@ -64,7 +65,7 @@ function draw_o(canvasNumber){
     content[canvasNumber-1] = 'O';
     turn++;
   }
-  if (turn > 3) checkForWin('X');
+  //if (turn > 3) checkForWin('X');
 }
 
 function draw_line(canvasNumber,start_x,start_y,end_x,end_y){
@@ -108,6 +109,7 @@ function checkForWin(symbol){
        }
          setTimeout(function(){ confirm("Player "+ symbol + " Won!") }, 100);
          setTimeout(function(){ location.reload(true); }, 100);
+         return 0;
        }
     }
 }
