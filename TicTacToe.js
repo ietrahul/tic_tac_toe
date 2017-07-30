@@ -1,5 +1,5 @@
 var content, winningCombinations , turn = 0;  // choice = "X";
-var player = 'o', opponent = 'x';
+var player = 'o', opponent = 'x', winBoard = 0;
 //Game methods
 window.onload=function(){
     content = new Array();
@@ -23,26 +23,38 @@ function isMovesLeft(content)
 }
 
 function canvasClicked(canvasNumber){
+// avoid double click on filled box
+if (content[canvasNumber-1] == '_') {
   if (turn%2 == 0){
     opponent === "x" ? draw_x(canvasNumber) : draw_o(canvasNumber);
-    //checkForWin('X');
   }else {
     opponent === "x" ? draw_o(canvasNumber) : draw_x(canvasNumber);
-    //checkForWin('O');
+  }
+  //check for opponent win
+  if (turn > 3){
+    if (evaluate(content) == 10 || evaluate(content) == -10) {
+      drawWinningLines(winBoard, opponent);
+      return;
+    }
   }
 
-var bestMove = findBestMove(content);
-player === "x" ? draw_x(bestMove+1) : draw_o(bestMove+1);
-    //checkForWin('X');
- /* if (turn > 3 && turn < 9){
-    checkForWin(content[canvasNumber-1] );
-  } else if (turn >=9) {
-    if (checkForWin(content[canvasNumber-1] ) != 0 ) {
-      setTimeout(function(){ confirm("THE GAME IS OVER!") }, 100);
-      setTimeout(function(){ location.reload(true); }, 100);
+  // computer move
+  var bestMove = findBestMove(content);
+  player === "x" ? draw_x(bestMove+1) : draw_o(bestMove+1);
+
+  if (turn > 3){
+    if (evaluate(content) == 10 || evaluate(content) == -10) {
+      drawWinningLines(winBoard, player);
+      return;
     }
-  }*/
-//
+  }
+
+    if (turn >= 9 && evaluate(content) == 0 )
+    {
+     setTimeout(function(){ confirm("Draw") }, 100);
+     setTimeout(function(){ location.reload(true); }, 100);
+    }
+  }
 }
 
 function draw_x(canvasNumber){
@@ -98,12 +110,8 @@ function draw_line(canvasNumber,start_x,start_y,end_x,end_y){
 }
 
 //evaluate the score win = 10 loss -10 draw 0
-/*function evaluate(symbol){
+function drawWinningLines( i, symbol ){
   //winningCombinations
-  for ( i = 0; i < winningCombinations.length; i++ ) {
-    if(content[winningCombinations[i][0]] === symbol &&
-       content[winningCombinations[i][1]] === symbol &&
-       content[winningCombinations[i][2]] === symbol){
        if(i < 3){
         draw_line(winningCombinations[i][0]+1, 0, 75, 300, 75);
         draw_line(winningCombinations[i][1]+1, 0, 75, 300, 75);
@@ -121,15 +129,11 @@ function draw_line(canvasNumber,start_x,start_y,end_x,end_y){
         draw_line(winningCombinations[i][1]+1, 0, 150, 300, 0);
         draw_line(winningCombinations[i][2]+1, 0, 150, 300, 0);
        }
-         //setTimeout(function(){ confirm("Player "+ symbol + " Won!") }, 100);
-         //setTimeout(function(){ location.reload(true); }, 100);
-         if (player === symbol) return +10;
-         return -10;
-       }
-    }
+         setTimeout(function(){ confirm("Player "+ symbol + " Won!") }, 100);
+         setTimeout(function(){ location.reload(true); }, 100);
   //for draw
   return 0;
-}*/
+}
 
 
 function evaluate(b)
@@ -137,7 +141,7 @@ function evaluate(b)
    for ( i = 0; i < winningCombinations.length; i++ ) {
      if(b[winningCombinations[i][0]] === b[winningCombinations[i][1]] &&
         b[winningCombinations[i][1]] === b[winningCombinations[i][2]]
-       ) {
+       ) {   winBoard = i;
              if (b[winningCombinations[i][0]]==player)
                return +10;
              else if (b[winningCombinations[i][0]]==opponent)
@@ -234,6 +238,36 @@ function findBestMove(content)
 {
     var bestVal = -1000;
     var bestMove = -1;
+    //am i going to win in next move so then choose that
+    for (var i = 0; i<9; i++)
+    {
+       if (content[i]=='_')
+       {
+          content[i] = player;
+          if (evaluate(content) == 10)  {
+            bestMove = i;
+            content[i] = '_';
+            return bestMove;
+          }
+          content[i] = '_';
+       }
+    }
+    //am i going to loose in next move so then avoid that
+    for (var i = 0; i<9; i++)
+    {
+       if (content[i]=='_')
+       {
+          content[i] = opponent;
+          if (evaluate(content) == -10)  {
+            bestMove = i;
+            content[i] = '_';
+            return bestMove;
+          }
+          content[i] = '_';
+       }
+    }
+    //center first rule
+    if (content[4]=='_') return 4;
     // Traverse all cells, evalutae minimax function for
     // all empty cells. And return the cell with optimal
     // value.
