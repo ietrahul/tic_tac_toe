@@ -268,7 +268,11 @@ function findBestMove(content)
     }
     //center first rule
     if (content[4]=='_') return 4;
-    // Traverse all cells, evalutae minimax function for
+    //one move that computer losing is chnaged to rule based
+
+    if (content[2]== opponent && content[7]== opponent  && content[5]== '_' ) return 5;
+
+   // Traverse all cells, evalutae minimax function for
     // all empty cells. And return the cell with optimal
     // value.
     for (var i = 0; i<9; i++)
