@@ -51,9 +51,26 @@ if (content[canvasNumber-1] == '_') {
 
     if (turn >= 9 && evaluate(content) == 0 )
     {
-     setTimeout(function(){ confirm("Draw") }, 100);
-     setTimeout(function(){ location.reload(true); }, 100);
+     //setTimeout(function(){ confirm("Draw") }, 100);
+         var modal = document.getElementById('myModal');
+         document.getElementById("result").innerHTML = "Draw!";
+         modal.style.display = "block";
+         var span = document.getElementsByClassName("close")[0];
+         // When the user clicks on <span> (x), close the modal
+         span.onclick = function() {
+             modal.style.display = "none";
+             setTimeout(function(){ location.reload(true); }, 100);
+         }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+             if (event.target == modal) {
+                 modal.style.display = "none";
+                 setTimeout(function(){ location.reload(true); }, 100);
+             }
+         }
+     //setTimeout(function(){ location.reload(true); }, 100);
     }
+
   }
 }
 
@@ -129,8 +146,24 @@ function drawWinningLines( i, symbol ){
         draw_line(winningCombinations[i][1]+1, 0, 150, 300, 0);
         draw_line(winningCombinations[i][2]+1, 0, 150, 300, 0);
        }
-         setTimeout(function(){ confirm("Player "+ symbol + " Won!") }, 100);
-         setTimeout(function(){ location.reload(true); }, 100);
+         //setTimeout(function(){ confirm("Player "+ symbol + " Won!") }, 100);
+         var modal = document.getElementById('myModal');
+         document.getElementById("result").innerHTML = "Player "+ symbol.toUpperCase() + " won!";
+         modal.style.display = "block";
+         var span = document.getElementsByClassName("close")[0];
+         // When the user clicks on <span> (x), close the modal
+         span.onclick = function() {
+             modal.style.display = "none";
+             setTimeout(function(){ location.reload(true); }, 100);
+         }
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+             if (event.target == modal) {
+                 modal.style.display = "none";
+                 setTimeout(function(){ location.reload(true); }, 100);
+             }
+         }
+        // setTimeout(function(){ location.reload(true); }, 100);
   //for draw
   return 0;
 }
